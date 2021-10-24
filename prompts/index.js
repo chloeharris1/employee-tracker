@@ -135,7 +135,6 @@ function viewAllEmployees() {
     })  
 }
 
-
 // Add Employee 
 // What is the employee's role? (Give user role choices to select)
 // Who is the employee's manager? (Give user manager choices to select)
