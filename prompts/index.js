@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
+const { bannerPrompt } = require('./banner');
 
 const db = mysql.createConnection(
     {
@@ -8,9 +9,9 @@ const db = mysql.createConnection(
         password: 'password',
         database: 'tracker_db'
     },
-    console.log('Connected to the tracker_db database.')
 );
 
+bannerPrompt()
 
 const main = () => {
     inquirer.prompt({
@@ -19,7 +20,48 @@ const main = () => {
         name: 'choice',
         choices: ['View All Employees', 'Add Employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Deparments', 'Add Department']
     })
+    .then((data) => {
+        switch (data.choice) {
+            case 'View All Employees': 
+            viewAllEmployees();
+            break;
+            case 'Add Employee':
+            addEmployee();
+            break;
+            case 'Update Employee Role':
+            updateEmployeeRole();
+            break;
+            case 'View All Roles':
+            viewAllRoles();
+            break;
+            case 'Add Role':
+            addRole();
+            break;
+            case 'View All Deparments':
+            viewAllDepartments();
+            break;
+            case 'Add Department':
+            addDepartment();
+            break;
+        }
+    })
+        
 }
+
+
+main()
+
+
+// .then((data) => {
+//     if (data.choice === 'View All Employees') {
+//         db.query('SELECT * FROM employee', (err, data) => {
+//             if (err) {
+//                 throw err;
+//             } else {
+//                 console.log(data)
+//             }
+//         })
+
 
 
 
