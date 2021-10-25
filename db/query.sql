@@ -1,5 +1,9 @@
-USE tracker_db;
+SELECT * FROM department; 
 
-SELECT * FROM department
-LEFT JOIN role AS title ON department.id AS department;
+SELECT * FROM role; 
+
+-- View All Roles, JOIN with department table ==
+SELECT role.id, role.title, role.salary
+FROM role
+JOIN department ON role.department_id = department_id;
 

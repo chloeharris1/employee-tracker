@@ -16,8 +16,10 @@ const db = mysql.createConnection(
     },
 );
 
+// Display employee manager banner
 bannerPrompt()
 
+// Main menu
 const main = () => {
     inquirer.prompt({
         type: 'list',
