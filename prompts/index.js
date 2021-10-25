@@ -30,17 +30,17 @@ const main = () => {
             case 'View All Deparments':
             viewAllDepartments();
             break;
-            case 'Add Department':
-            addDepartment();
-            break;
             case 'View All Roles':
             viewAllRoles();
             break;
-            case 'Add Role':
-            addRole();
-            break;
             case 'View All Employees': 
             viewAllEmployees();
+            break;
+            case 'Add Department':
+            addDepartment();
+            break;
+            case 'Add Role':
+            addRole();
             break;
             case 'Add Employee':
             addEmployee();
@@ -57,7 +57,7 @@ const main = () => {
         
 }
 
-main()
+main();
 
 // View All Departments (JOIN Left to right: id, name)
 function viewAllDepartments() {
@@ -71,25 +71,10 @@ function viewAllDepartments() {
     })   
 }
 
-
-// Add Department 
-// What is the name of the department? Then console log (Added "x" to the database)
-function addDepartment() {
-    inquirer.prompt ([
-        {
-            type: 'Input',
-            name: 'dept_name',
-            message: 'What is the name of the department?', 
-        },
-        console.log('Added to the database')
-    ])
-
-}
-
 // View All Roles 
 // Join roles table with department table (Left to right: id, title, department, salary)
 function viewAllRoles() {
-    db.query('SELECT * FROM role', (err, data) => {
+    db.query('SELECT * FROM roles', (err, data) => {
         if (err) {
             throw err;
         } else {
@@ -99,6 +84,35 @@ function viewAllRoles() {
     })
 }
 
+function viewAllEmployees() {
+    db.query('SELECT * FROM employee', (err, data) => {
+        if (err) {
+            throw err;
+        } else {
+            console.log(data);
+            main()
+        }
+    })  
+}
+
+// Add Department 
+// What is the name of the department? Then console log (Added "x" to the database)
+function addDepartment() {
+    inquirer.prompt ([
+        {
+            type: 'Input',
+            name: 'name',
+            message: 'What is the name of the department?', 
+        },
+    ]).then((ans) => {
+        db.query('INSERT INTO department WHERE department_id=?', ans.id, (err, data) => {
+            console.log ('Added to the database')
+        });
+        main();
+    });
+
+};
+
 // Add Role 
 // Which department does the role belong to? (Give user department choices to select)
 // Then console log (Added "x" to the database)
@@ -106,7 +120,7 @@ function addRole() {
     inquirer.prompt ([
         {
             type: 'Input',
-            name: 'role_name',
+            name: 'title',
             message: 'What is the name of the role?', 
         },
         {
@@ -116,24 +130,18 @@ function addRole() {
         },
         {
             type: 'list',
-            name: 'dept_choice',
+            name: 'department',
             message: 'Which department does the role belong to?', 
             choices: ['Engineering', 'Finance', 'Legal', 'Sales']
         },
-        console.log('Added (department) to the database')
-    ])
-}
-
-function viewAllEmployees() {
-    db.query('SELECT * FROM employees', (err, data) => {
-        if (err) {
-            throw err;
-        } else {
-            console.log(data);
-            main()
-        }
-    })  
-}
+        
+    ]).then ((ans) => {
+        db.query('INSERT INTO role WHERE role_title=?, salary=?, department=?', ans.title, ans.salary, ans.department, (err, data) => {
+            console.log('Added (department) to the database')
+        });
+        main();
+    });
+};
 
 // Add Employee 
 // What is the employee's role? (Give user role choices to select)
@@ -164,10 +172,15 @@ function addEmployee() {
             message: 'Who is the employee\'s manager?', 
             choices: []
         },
-        console.log('Added (name) to the database')
-    ])
+        
+    ]).then ((ans) => {
+        db.query('INSERT INTO employee WHERE first_name=?, last_name=?, employee_role=?, manager=?', ans.first_name, ans.last_name, ans.employee_role, ans.manager, (err, data) => {
+            console.log('Added (name) to the database')
+        });
+        main();
+    });
 
-}
+};
 
 function updateEmployeeRole() {
     inquirer.prompt ([
@@ -181,11 +194,16 @@ function updateEmployeeRole() {
             type: 'list',
             name: 'new_role',
             message: 'Which role do you want to assign to the selected employee?',
-            choices: ['Sales Lead', 'Sales Person', 'Lead Engineer', 'Software Engineer', 'Account Manager', 'Accountant', 'Legal Team Lead', 'Lawyer'] 
+            choices: [] 
         },
+    ]).then((ans) => {
+    db.query('INSERT INTO employee WHERE employee=?, new_role=?', ans.employee, ans.new_role, (err, data) => {
         console.log('Updated employee\'s role')
-    ])
-}
+    });
+    main();
+    });
+
+};
 
 
 
