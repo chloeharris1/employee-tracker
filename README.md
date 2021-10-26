@@ -1,6 +1,16 @@
 # Employee Tracker
 A command-line application that manages a company's employee database, using Node.js, Inquirer, and MySQL.
 
+## Table of Contents 
+
+- [Usage](#usage)
+- [Demo](#demo)
+- [Screenshot](#screenshot)
+- [Questions](#questions)
+
+<br />
+<br />
+
 ## Usage
 When you want to run the application, type the below into your terminal command line:
 ```
