@@ -65,25 +65,25 @@ main();
 
 // View All Departments (id, name)
 function viewAllDepartments() {
-    db.query('SELECT * FROM department', (err, data) => {
+    db.query(`SELECT * FROM department`, (err, data) => {
         if (err) {
             throw err;
         } else {
-            console.log(data);
+            console.table(data);
             main()
         }
     })
 }
 
 // View All Roles 
-// Join roles table with department table (id, title, department, salary)
 function viewAllRoles() {
-    db.query(`SELECT roles.id, roles.title,roles.salary,departments.department_name 
-    FROM roles, departments WHERE roles.department_id=departments.id`, (err, data) => {
+    db.query(`SELECT role.id, role.title,role.salary,department.department.name 
+    FROM role, department 
+    WHERE role.department_id=department.id`, (err, data) => {
         if (err) {
             throw err;
         } else {
-            console.log(data);
+            console.table(data);
             main()
         }
     })
@@ -119,7 +119,6 @@ function viewAllEmployees() {
 }
 
 // Add Department 
-// What is the name of the department? Then console log (Added "x" to the database)
 function addDepartment() {
     inquirer.prompt([
         {
@@ -128,17 +127,14 @@ function addDepartment() {
             message: 'What is the name of the department?',
         },
     ]).then((ans) => {
-        db.query(`INSERT INTO department (department_name) VALUES ('${department_name}')`, (err, data) => {
-            console.log('Added to the database')
-        });
+        // console.log(ans);
+        db.query(`INSERT INTO department SET ?`, ans)
         main();
     });
 
 };
 
 // Add Role 
-// Which department does the role belong to? (Give user department choices to select)
-// Then console log (Added "x" to the database)
 
 function addRole() {
     inquirer.prompt([
@@ -160,25 +156,17 @@ function addRole() {
         },
 
     ]).then((ans) => {
-        db.query(`INSERT INTO roles (title, salary, department_id) VALUES ['title', 'salary', 'department_id')`, (err, data) => {
-            console.log('Added (department) to the database')
-        });
+        // console.log(ans);
+        db.query(`INSERT INTO role SET ?`, ans)
         main();
     });
 };
 
 // Add Employee 
-// What is the employee's role? (Give user role choices to select)
-// Who is the employee's manager? (Give user manager choices to select)
-// Then console log (Added "x" to the database)
 
 async function addEmployee() {
 
     const allRolesRaw = await db.promise().query('SELECT * FROM role');
-    // , (err, data) => {
-    //     if (err) throw err;
-    //     return data;
-    // });
 
     const role = allRolesRaw[0].map((role) => {
         return {
@@ -187,13 +175,8 @@ async function addEmployee() {
         }
     });
 
-    //console.log(allRolesRaw[0], role);
 
     const allEmployeeRaw = await db.promise().query('SELECT * FROM employee');
-    // , (err, data) => {
-    //     if (err) throw err;
-    //     return data;
-    // });
 
     const employees = allEmployeeRaw[0].map((employee) => {
         return {
@@ -227,7 +210,7 @@ async function addEmployee() {
         }
     ]).then((ans) => {
 
-        console.log(ans);
+        // console.log(ans);
 
         db.query(`INSERT INTO employee SET ?`, ans)
         main();
@@ -237,10 +220,7 @@ async function addEmployee() {
 
 async function updateEmployeeRole() {
     const allRolesRaw = await db.promise().query('SELECT * FROM role');
-    // , (err, data) => {
-    //     if (err) throw err;
-    //     return data;
-    // });
+
 
     const role = allRolesRaw[0].map((role) => {
         return {
@@ -249,13 +229,9 @@ async function updateEmployeeRole() {
         }
     });
 
-    //console.log(allRolesRaw[0], role);
 
     const allEmployeeRaw = await db.promise().query('SELECT * FROM employee');
-    // , (err, data) => {
-    //     if (err) throw err;
-    //     return data;
-    // });
+
 
     const employees = allEmployeeRaw[0].map((employee) => {
         return {
@@ -278,30 +254,11 @@ async function updateEmployeeRole() {
         },
     ]).then((ans) => {
         db.query(`UPDATE employee SET role_id = ? WHERE id= ?`, [ans.role_id, ans.employee_id]);
-        // , (err, data) => {
-        //     console.log('Updated employee\'s role')
-        // });
+
         main();
     });
 
 };
-
-
-
-
-// ### Bonus
-
-// Fulfilling any of the following can add up to 20 points to your grade. Note that the highest grade you can achieve is still 100:
-
-// * Application allows users to update employee managers (2 points).
-
-// * Application allows users to view employees by manager (2 points).
-
-// * Application allows users to view employees by department (2 points).
-
-// * Application allows users to delete departments, roles, and employees (2 points for each).
-
-// * Application allows users to view the total utilized budget of a department&mdash;in other words, the combined salaries of all employees in that department (8 points).
 
 
 
