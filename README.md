@@ -23,7 +23,7 @@ The following video shows an example of the application being used from the comm
 
 ## Screenshot
 
-# Menu
+### Menu
 <img width="347" alt="menu" src="https://user-images.githubusercontent.com/89039793/138816180-fd1f0b0d-033e-4ec4-a472-eadd8e17676a.PNG">
 
 
